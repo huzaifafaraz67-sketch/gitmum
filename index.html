@@ -46,6 +46,11 @@
       width: 100%;
       border-radius: 5px;
     }
+    #status {
+      text-align: center;
+      grid-column: 1 / -1;
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
@@ -56,42 +61,45 @@
   </header>
 
   <main class="grid" id="songContainer">
-    <!-- MP4 files will automatically appear here -->
+    <p id="status">Loading tracks from GitHub...</p>
   </main>
 
   <script>
-    // Fetch files from the current directory
-    fetch('./')
-      .then(response => response.text())
-      .then(html => {
-        // Parse the directory HTML page
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, 'text/html');
-        const links = Array.from(doc.querySelectorAll('a'));
-        const container = document.getElementById('songContainer');
+    // Automatically detect your GitHub username and repo name from the site URL
+    const hostParts = window.location.hostname.split('.');
+    const pathParts = window.location.pathname.split('/').filter(p => p.length > 0);
 
-        // Filter out links that end with .mp4
-        const mp4Files = links
-          .map(link => link.getAttribute('href'))
-          .filter(href => href && href.toLowerCase().endsWith('.mp4'));
+    const username = hostParts[0]; // e.g., your-username
+    const repoName = pathParts[0] || `${username}.github.io`; 
+
+    const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
+    const container = document.getElementById('songContainer');
+
+    fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) throw new Error('Could not fetch repository contents');
+        return response.json();
+      })
+      .then(data => {
+        // Filter out files that end with .mp4
+        const mp4Files = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
 
         if (mp4Files.length === 0) {
-          container.innerHTML = '<p>No MP4 files found in the root directory yet.</p>';
+          container.innerHTML = '<p id="status">No MP4 files found in this repository.</p>';
           return;
         }
 
-        // Build a card for each MP4 file found
+        container.innerHTML = ''; // Clear loading text
+
+        // Build cards for all found MP4 files
         mp4Files.forEach(file => {
           const card = document.createElement('div');
           card.className = 'card';
-          
-          // Clean up the file name for display
-          const fileName = decodeURIComponent(file).replace(/^.*[\\\/]/, '');
 
           card.innerHTML = `
-            <h3>${fileName}</h3>
+            <h3>${file.name}</h3>
             <video controls preload="metadata">
-              <source src="${file}" type="video/mp4">
+              <source src="${file.download_url}" type="video/mp4">
               Your browser does not support playing this video.
             </video>
           `;
@@ -99,9 +107,8 @@
         });
       })
       .catch(err => {
-        console.error('Could not list folder contents:', err);
-        document.getElementById('songContainer').innerHTML = 
-          '<p>Note: Make sure your web server permits directory indexing to read root files.</p>';
+        console.error(err);
+        container.innerHTML = '<p id="status">Error loading MP4 files. Check console for details.</p>';
       });
   </script>
 
