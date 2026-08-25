@@ -61,37 +61,34 @@
   </header>
 
   <main class="grid" id="songContainer">
-    <p id="status">Loading tracks from GitHub...</p>
+    <p id="status">Loading tracks...</p>
   </main>
 
   <script>
-    // Automatically detect your GitHub username and repo name from the site URL
-    const hostParts = window.location.hostname.split('.');
-    const pathParts = window.location.pathname.split('/').filter(p => p.length > 0);
-
-    const username = hostParts[0]; // e.g., your-username
-    const repoName = pathParts[0] || `${username}.github.io`; 
+    // GitHub repository details
+    const username = 'huzaifafaraz67-sketch';
+    const repoName = 'gitmum';
 
     const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
     const container = document.getElementById('songContainer');
 
     fetch(apiUrl)
       .then(response => {
-        if (!response.ok) throw new Error('Could not fetch repository contents');
+        if (!response.ok) throw new Error('Failed to fetch repo contents');
         return response.json();
       })
       .then(data => {
-        // Filter out files that end with .mp4
+        // Find files ending in .mp4 (case-insensitive)
         const mp4Files = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
 
         if (mp4Files.length === 0) {
-          container.innerHTML = '<p id="status">No MP4 files found in this repository.</p>';
+          container.innerHTML = '<p id="status">No MP4 files found in the root directory.</p>';
           return;
         }
 
-        container.innerHTML = ''; // Clear loading text
+        container.innerHTML = ''; // Clear loading message
 
-        // Build cards for all found MP4 files
+        // Generate video player cards
         mp4Files.forEach(file => {
           const card = document.createElement('div');
           card.className = 'card';
