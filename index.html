@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gitmum - Funk Tracks</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #fff;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    h1 {
+      font-size: 2.5rem;
+      color: #ff0055;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #1e1e1e;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+    }
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+      word-break: break-all;
+    }
+    video {
+      width: 100%;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>gitmum</h1>
+    <p>Your Funk Media Hub</p>
+  </header>
+
+  <main class="grid" id="songContainer">
+    <!-- MP4 files will automatically appear here -->
+  </main>
+
+  <script>
+    // Fetch files from the current directory
+    fetch('./')
+      .then(response => response.text())
+      .then(html => {
+        // Parse the directory HTML page
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = Array.from(doc.querySelectorAll('a'));
+        const container = document.getElementById('songContainer');
+
+        // Filter out links that end with .mp4
+        const mp4Files = links
+          .map(link => link.getAttribute('href'))
+          .filter(href => href && href.toLowerCase().endsWith('.mp4'));
+
+        if (mp4Files.length === 0) {
+          container.innerHTML = '<p>No MP4 files found in the root directory yet.</p>';
+          return;
+        }
+
+        // Build a card for each MP4 file found
+        mp4Files.forEach(file => {
+          const card = document.createElement('div');
+          card.className = 'card';
+          
+          // Clean up the file name for display
+          const fileName = decodeURIComponent(file).replace(/^.*[\\\/]/, '');
+
+          card.innerHTML = `
+            <h3>${fileName}</h3>
+            <video controls preload="metadata">
+              <source src="${file}" type="video/mp4">
+              Your browser does not support playing this video.
+            </video>
+          `;
+          container.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error('Could not list folder contents:', err);
+        document.getElementById('songContainer').innerHTML = 
+          '<p>Note: Make sure your web server permits directory indexing to read root files.</p>';
+      });
+  </script>
+
+</body>
+</html>
