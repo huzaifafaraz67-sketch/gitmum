@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>gitmum</title>
 
-  <!-- PWA Manifest & Meta Tags -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#ff0055">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
-  <!-- Favicon -->
+
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>▶</text></svg>">
   
   <style>
@@ -30,7 +27,6 @@
       padding: 20px;
     }
 
-    /* Header */
     header {
       display: flex;
       align-items: center;
@@ -54,7 +50,6 @@
       border-radius: 6px;
     }
 
-    /* Install Banner Button inside Header */
     .install-btn {
       background: #ff0055;
       color: #fff;
@@ -64,13 +59,24 @@
       font-weight: 600;
       cursor: pointer;
       display: none;
-      transition: background 0.2s;
-    }
-    .install-btn:hover {
-      background: #e0004c;
     }
 
-    /* Main Player Container */
+    /* Offline Banner Notice */
+    #offlineNotice {
+      display: none;
+      background: #2a151b;
+      border: 1px solid #ff0055;
+      color: #ff80a5;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .offline-icon {
+      font-size: 2.5rem;
+      margin-bottom: 5px;
+    }
+
     .player-section {
       display: none;
       grid-template-columns: 1fr 350px;
@@ -97,7 +103,6 @@
       pointer-events: none;
     }
 
-    /* Video Details & Controls Bar */
     .main-details {
       margin-top: 15px;
     }
@@ -114,6 +119,7 @@
       padding: 10px 15px;
       border-radius: 8px;
       margin-top: 10px;
+      flex-wrap: wrap;
     }
     .btn {
       background: none;
@@ -124,6 +130,15 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .inapp-download-btn {
+      background: #272727;
+      border: 1px solid #444;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
     }
     .progress-bar {
       flex: 1;
@@ -144,19 +159,6 @@
       background: #ff0055;
     }
 
-    /* Dropdown Menus */
-    select.setting-select {
-      background: #383838;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      outline: none;
-      cursor: pointer;
-    }
-
-    /* Video Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -196,10 +198,10 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .card-author {
-      font-size: 0.8rem;
-      color: #aaa;
-      margin-top: 3px;
+    .card-status-badge {
+      font-size: 0.75rem;
+      color: #00ff88;
+      margin-top: 4px;
     }
 
     #status {
@@ -219,7 +221,13 @@
     <button class="install-btn" id="installBtn">Install App</button>
   </header>
 
-  <!-- Big Screen Player Section -->
+  <!-- Offline Network Overlay Banner -->
+  <div id="offlineNotice">
+    <div class="offline-icon">📡❌</div>
+    <h3>No Connection</h3>
+    <p>Showing in-app downloaded media. Network feature updates will resume when online.</p>
+  </div>
+
   <div class="player-section" id="playerSection">
     <div>
       <div class="main-video-box">
@@ -231,21 +239,7 @@
           <button class="btn" id="playBtn" onclick="togglePlay()">▶</button>
           <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
           <button class="btn" id="muteBtn" onclick="toggleMute()">🔊</button>
-          
-          <select class="setting-select" id="qualitySelect" onchange="changeQuality(this.value)">
-            <option value="1080p">1080p HD</option>
-            <option value="720p" selected>720p</option>
-            <option value="480p">480p</option>
-            <option value="360p">360p</option>
-          </select>
-
-          <select class="setting-select" id="speedSelect" onchange="changeSpeed(this.value)">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1.0x (Normal)</option>
-            <option value="1.25">1.25x</option>
-            <option value="1.5">1.5x</option>
-            <option value="2">2.0x</option>
-          </select>
+          <button class="inapp-download-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">💾 Save Offline</button>
         </div>
       </div>
     </div>
@@ -256,26 +250,22 @@
     </div>
   </div>
 
-  <!-- Video Grid -->
   <main class="grid" id="songContainer">
     <p id="status">Loading videos...</p>
   </main>
 
   <script>
-    // 1. Service Worker Registration for PWA Install
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
     }
 
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block'; // Show header button if available
+      installBtn.style.display = 'block';
     });
-
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -286,7 +276,6 @@
       }
     });
 
-    // 2. Fetch Repo Videos
     const username = 'huzaifafaraz67-sketch';
     const repoName = 'gitmum';
     const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
@@ -298,77 +287,125 @@
     const playBtn = document.getElementById('playBtn');
     const muteBtn = document.getElementById('muteBtn');
     const seekBar = document.getElementById('seekBar');
+    const offlineNotice = document.getElementById('offlineNotice');
+    const downloadAppBtn = document.getElementById('downloadAppBtn');
 
     let currentFileUrl = '';
+    let currentTitleClean = '';
     let allFiles = [];
 
-    document.addEventListener('keydown', (e) => {
-      if (
-        (e.ctrlKey && (e.key === 's' || e.key === 'u')) || 
-        (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
-        e.key === 'F12'
-      ) {
-        e.preventDefault();
-      }
-    });
-
-    function safePlay() {
-      const playPromise = mainPlayer.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            playBtn.innerText = '❚❚';
-          })
-          .catch(err => {
-            if (err.name !== 'AbortError') {
-              console.error("Playback error:", err);
-            }
-            playBtn.innerText = '▶';
-          });
+    // Offline / Online network state handlers
+    function updateNetworkStatus() {
+      if (!navigator.onLine) {
+        offlineNotice.style.display = 'block';
+        loadOfflineTracks();
+      } else {
+        offlineNotice.style.display = 'none';
+        fetchOnlineTracks();
       }
     }
 
-    fetch(apiUrl)
-      .then(res => res.json())
-      .then(data => {
-        allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
 
-        if (allFiles.length === 0) {
-          container.innerHTML = '<p id="status">No MP4 files found in the root directory.</p>';
-          return;
-        }
+    // Load from GitHub API when online
+    function fetchOnlineTracks() {
+      fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+          allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+          renderGrid(allFiles);
+        })
+        .catch(() => loadOfflineTracks());
+    }
 
-        container.innerHTML = '';
+    // Load saved tracks from Cache Storage when offline
+    async function loadOfflineTracks() {
+      const cache = await caches.open('gitmum-media');
+      const keys = await cache.keys();
+      
+      if (keys.length === 0) {
+        container.innerHTML = '<p id="status">No internet connection and no in-app downloaded tracks saved.</p>';
+        return;
+      }
 
-        allFiles.forEach(file => {
-          const cleanTitle = file.name.replace(/\.mp4$/i, '');
-          const card = document.createElement('div');
-          card.className = 'card';
-          card.onclick = () => openVideo(file.download_url, cleanTitle);
+      container.innerHTML = '';
+      keys.forEach(request => {
+        const url = request.url;
+        const filename = url.substring(url.lastIndexOf('/') + 1);
+        const cleanTitle = decodeURIComponent(filename).replace(/\.mp4$/i, '');
 
-          card.innerHTML = `
-            <div class="card-thumb">▶</div>
-            <div class="card-info">
-              <div class="card-title">${cleanTitle}</div>
-              <div class="card-author">gitmum • Funk</div>
-            </div>
-          `;
-          container.appendChild(card);
-        });
-      })
-      .catch(err => {
-        container.innerHTML = '<p id="status">Error loading videos.</p>';
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openVideo(url, cleanTitle);
+
+        card.innerHTML = `
+          <div class="card-thumb">▶</div>
+          <div class="card-info">
+            <div class="card-title">${cleanTitle}</div>
+            <div class="card-status-badge">⚡ Downloaded Offline</div>
+          </div>
+        `;
+        container.appendChild(card);
       });
+    }
+
+    function renderGrid(files) {
+      if (files.length === 0) {
+        container.innerHTML = '<p id="status">No MP4 files found.</p>';
+        return;
+      }
+      container.innerHTML = '';
+      files.forEach(file => {
+        const cleanTitle = file.name.replace(/\.mp4$/i, '');
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openVideo(file.download_url, cleanTitle);
+
+        card.innerHTML = `
+          <div class="card-thumb">▶</div>
+          <div class="card-info">
+            <div class="card-title">${cleanTitle}</div>
+            <div class="card-author">gitmum • Funk</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Download video directly to App Storage
+    async function downloadTrackLocally() {
+      if (!currentFileUrl) return;
+      downloadAppBtn.innerText = '⏳ Downloading...';
+      try {
+        const cache = await caches.open('gitmum-media');
+        await cache.add(currentFileUrl);
+        downloadAppBtn.innerText = '✓ Saved in App';
+      } catch (err) {
+        downloadAppBtn.innerText = '❌ Failed';
+      }
+    }
+
+    async function checkSavedState(url) {
+      const cache = await caches.open('gitmum-media');
+      const match = await cache.match(url);
+      if (match) {
+        downloadAppBtn.innerText = '✓ Saved in App';
+      } else {
+        downloadAppBtn.innerText = '💾 Save Offline';
+      }
+    }
 
     function openVideo(url, title) {
       currentFileUrl = url;
+      currentTitleClean = title;
       mainPlayer.src = url;
       mainTitle.innerText = title;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      checkSavedState(url);
       safePlay();
-      renderUpNext(title);
     }
 
     function closePlayer() {
@@ -376,36 +413,15 @@
       playerSection.style.display = 'none';
     }
 
-    function renderUpNext(currentTitle) {
-      const nextContainer = document.getElementById('nextContainer');
-      nextContainer.innerHTML = '';
-
-      allFiles.forEach(file => {
-        const cleanTitle = file.name.replace(/\.mp4$/i, '');
-        if (cleanTitle === currentTitle) return;
-
-        const item = document.createElement('div');
-        item.style.cssText = 'display: flex; gap: 10px; cursor: pointer;';
-        item.onclick = () => openVideo(file.download_url, cleanTitle);
-
-        item.innerHTML = `
-          <div style="width: 120px; aspect-ratio: 16/9; background: #222; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff0055;">▶</div>
-          <div>
-            <div style="font-size: 0.85rem; font-weight: 600;">${cleanTitle}</div>
-            <div style="font-size: 0.75rem; color: #aaa;">gitmum</div>
-          </div>
-        `;
-        nextContainer.appendChild(item);
-      });
+    function safePlay() {
+      const playPromise = mainPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => playBtn.innerText = '❚❚').catch(() => playBtn.innerText = '▶');
+      }
     }
 
     function togglePlay() {
-      if (mainPlayer.paused) {
-        safePlay();
-      } else {
-        mainPlayer.pause();
-        playBtn.innerText = '▶';
-      }
+      if (mainPlayer.paused) { safePlay(); } else { mainPlayer.pause(); playBtn.innerText = '▶'; }
     }
 
     function toggleMute() {
@@ -414,29 +430,15 @@
     }
 
     function seekVideo(val) {
-      if (mainPlayer.duration) {
-        mainPlayer.currentTime = (val / 100) * mainPlayer.duration;
-      }
+      if (mainPlayer.duration) mainPlayer.currentTime = (val / 100) * mainPlayer.duration;
     }
 
     mainPlayer.addEventListener('timeupdate', () => {
-      if (mainPlayer.duration) {
-        seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
-      }
+      if (mainPlayer.duration) seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
     });
 
-    function changeSpeed(val) {
-      mainPlayer.playbackRate = parseFloat(val);
-    }
-
-    function changeQuality(val) {
-      const currentTime = mainPlayer.currentTime;
-      const wasPlaying = !mainPlayer.paused;
-      
-      mainPlayer.src = currentFileUrl;
-      mainPlayer.currentTime = currentTime;
-      if (wasPlaying) safePlay();
-    }
+    // Initialize network status on startup
+    updateNetworkStatus();
   </script>
 </body>
 </html>
