@@ -4,8 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>gitmum</title>
+
+  <!-- PWA Manifest & Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#ff0055">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
-  <!-- Inline Favicon to fix 404 error -->
+  <!-- Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>▶</text></svg>">
   
   <style>
@@ -27,7 +34,7 @@
     header {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: space-between;
       margin-bottom: 25px;
       padding-bottom: 15px;
       border-bottom: 1px solid #272727;
@@ -47,7 +54,23 @@
       border-radius: 6px;
     }
 
-    /* Main Player Container (Big Screen View) */
+    /* Install Banner Button inside Header */
+    .install-btn {
+      background: #ff0055;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      transition: background 0.2s;
+    }
+    .install-btn:hover {
+      background: #e0004c;
+    }
+
+    /* Main Player Container */
     .player-section {
       display: none;
       grid-template-columns: 1fr 350px;
@@ -133,7 +156,7 @@
       cursor: pointer;
     }
 
-    /* Up Next Sidebar & Video Grid */
+    /* Video Grid */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -193,6 +216,7 @@
     <div class="logo" onclick="closePlayer()">
       <span class="logo-icon">▶</span> gitmum
     </div>
+    <button class="install-btn" id="installBtn">Install App</button>
   </header>
 
   <!-- Big Screen Player Section -->
@@ -208,7 +232,6 @@
           <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
           <button class="btn" id="muteBtn" onclick="toggleMute()">🔊</button>
           
-          <!-- Quality Menu -->
           <select class="setting-select" id="qualitySelect" onchange="changeQuality(this.value)">
             <option value="1080p">1080p HD</option>
             <option value="720p" selected>720p</option>
@@ -216,7 +239,6 @@
             <option value="360p">360p</option>
           </select>
 
-          <!-- Speed Menu -->
           <select class="setting-select" id="speedSelect" onchange="changeSpeed(this.value)">
             <option value="0.5">0.5x</option>
             <option value="1" selected>1.0x (Normal)</option>
@@ -228,7 +250,6 @@
       </div>
     </div>
     
-    <!-- Sidebar Tracks -->
     <div id="sidebarList">
       <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Up Next</h3>
       <div id="nextContainer" style="display: flex; flex-direction: column; gap: 15px;"></div>
@@ -241,6 +262,31 @@
   </main>
 
   <script>
+    // 1. Service Worker Registration for PWA Install
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'block'; // Show header button if available
+    });
+
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then(() => {
+          deferredPrompt = null;
+          installBtn.style.display = 'none';
+        });
+      }
+    });
+
+    // 2. Fetch Repo Videos
     const username = 'huzaifafaraz67-sketch';
     const repoName = 'gitmum';
     const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
@@ -256,7 +302,6 @@
     let currentFileUrl = '';
     let allFiles = [];
 
-    // Block save keyboard shortcuts
     document.addEventListener('keydown', (e) => {
       if (
         (e.ctrlKey && (e.key === 's' || e.key === 'u')) || 
@@ -267,7 +312,6 @@
       }
     });
 
-    // Safe Play Function (Fixes AbortError)
     function safePlay() {
       const playPromise = mainPlayer.play();
       if (playPromise !== undefined) {
@@ -284,7 +328,6 @@
       }
     }
 
-    // Fetch repository videos
     fetch(apiUrl)
       .then(res => res.json())
       .then(data => {
@@ -317,7 +360,6 @@
         container.innerHTML = '<p id="status">Error loading videos.</p>';
       });
 
-    // Open video on Big Screen
     function openVideo(url, title) {
       currentFileUrl = url;
       mainPlayer.src = url;
@@ -357,7 +399,6 @@
       });
     }
 
-    // Playback Controls
     function togglePlay() {
       if (mainPlayer.paused) {
         safePlay();
@@ -384,7 +425,6 @@
       }
     });
 
-    // Settings Functions
     function changeSpeed(val) {
       mainPlayer.playbackRate = parseFloat(val);
     }
