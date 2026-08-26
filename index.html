@@ -6,15 +6,15 @@
   <title>gitmum</title>
 
   <!-- PWA & Mobile Meta Tags -->
-  <link rel="manifest" href="./manifest.json?v=2">
-  <meta name="theme-color" content="#e95420">
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#ff0055">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="gitmum">
 
-  <!-- Ubuntu Vector Favicon -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>">
+  <!-- SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,9 +24,9 @@
     :root {
       --bg-dark: #0a0a0c;
       --bg-card: rgba(22, 22, 29, 0.75);
-      --accent: #e95420;
-      --accent-glow: rgba(233, 84, 32, 0.4);
-      --accent-alt: #77216f;
+      --accent: #ff0055;
+      --accent-glow: rgba(255, 0, 85, 0.4);
+      --accent-alt: #7928ca;
       --text-main: #f8f9fa;
       --text-muted: #a1a1aa;
       --glass-border: rgba(255, 255, 255, 0.08);
@@ -47,8 +47,8 @@
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(233, 84, 32, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(119, 33, 111, 0.15) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, rgba(255, 0, 85, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(121, 40, 202, 0.12) 0px, transparent 50%);
       background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
@@ -92,15 +92,8 @@
       align-items: center;
       justify-content: center;
       border-radius: 10px;
+      font-size: 1rem;
       box-shadow: 0 0 15px var(--accent-glow);
-    }
-
-    .logo-badge svg {
-      width: 24px;
-      height: 24px;
-      fill: none;
-      stroke: #ffffff;
-      stroke-width: 7;
     }
 
     .install-btn {
@@ -123,9 +116,9 @@
 
     #offlineNotice {
       display: none;
-      background: rgba(233, 84, 32, 0.1);
+      background: rgba(255, 0, 85, 0.1);
       border: 1px solid var(--accent);
-      color: #ff9d7d;
+      color: #ff80a5;
       padding: 16px;
       border-radius: var(--radius-md);
       text-align: center;
@@ -284,7 +277,7 @@
 
     .card:hover {
       transform: translateY(-6px);
-      border-color: rgba(233, 84, 32, 0.4);
+      border-color: rgba(255, 0, 85, 0.4);
     }
 
     .card-thumb {
@@ -304,7 +297,7 @@
       z-index: 2;
       width: 50px;
       height: 50px;
-      background: rgba(233, 84, 32, 0.85);
+      background: rgba(255, 0, 85, 0.85);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -350,17 +343,10 @@
 
   <header>
     <div class="logo" onclick="closePlayer()">
-      <div class="logo-badge">
-        <svg viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="24" />
-          <circle cx="50" cy="20" r="8" fill="#ffffff" stroke="none" />
-          <circle cx="24" cy="65" r="8" fill="#ffffff" stroke="none" />
-          <circle cx="76" cy="65" r="8" fill="#ffffff" stroke="none" />
-        </svg>
-      </div>
+      <div class="logo-badge">⚡</div>
       <span>gitmum</span>
     </div>
-    <button class="install-btn" id="installBtn"> Install App</button>
+    <button class="install-btn" id="installBtn">⚡ Install App</button>
   </header>
 
   <div id="offlineNotice">
@@ -371,7 +357,7 @@
   <div class="player-section" id="playerSection">
     <div class="player-card">
       <div class="main-video-box">
-        <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
+        <video id="mainPlayer" controlsList="nodownload noremoteplayback"></video>
       </div>
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
@@ -395,7 +381,6 @@
   </main>
 
   <script>
-    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js', { scope: './' })
@@ -427,7 +412,6 @@
 
     const username = 'huzaifafaraz67-sketch';
     const repoName = 'gitmum';
-    const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
 
     const container = document.getElementById('songContainer');
     const playerSection = document.getElementById('playerSection');
@@ -457,13 +441,22 @@
     window.addEventListener('offline', updateNetworkStatus);
 
     function fetchOnlineTracks() {
-      fetch(apiUrl)
-        .then(res => res.json())
-        .then(data => {
-          allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
-          renderGrid(allFiles);
-        })
-        .catch(() => loadOfflineTracks());
+      // List all your video filenames here
+      const videoFiles = [
+        'CUTE DEPRESSED.mp4'
+      ];
+
+      allFiles = videoFiles.map(filename => {
+        // Encodes spaces (%20) to prevent URL loading issues
+        const encodedName = encodeURIComponent(filename);
+        return {
+          name: filename,
+          // jsDelivr CDN link prevents 503 throttling errors
+          download_url: `https://cdn.jsdelivr.net/gh/${username}/${repoName}@main/${encodedName}`
+        };
+      });
+
+      renderGrid(allFiles);
     }
 
     async function loadOfflineTracks() {
@@ -479,7 +472,7 @@
       keys.forEach(request => {
         const url = request.url;
         const filename = url.substring(url.lastIndexOf('/') + 1);
-        const cleanTitle = decodeURIComponent(filename).replace(/\.mp4$/i, '');
+        const cleanTitle = decodeURIComponent(filename).replace(/\.(mp4|mov|mkv|webm)$/i, '');
 
         const card = document.createElement('div');
         card.className = 'card';
@@ -500,12 +493,12 @@
 
     function renderGrid(files) {
       if (files.length === 0) {
-        container.innerHTML = '<p id="status">No MP4 tracks found in repository.</p>';
+        container.innerHTML = '<p id="status">No video tracks found.</p>';
         return;
       }
       container.innerHTML = '';
       files.forEach(file => {
-        const cleanTitle = file.name.replace(/\.mp4$/i, '');
+        const cleanTitle = file.name.replace(/\.(mp4|mov|mkv|webm)$/i, '');
         const card = document.createElement('div');
         card.className = 'card';
         card.onclick = () => openVideo(file.download_url, cleanTitle);
@@ -541,21 +534,14 @@
       downloadAppBtn.innerText = match ? '✓ Saved Offline' : '💾 Save Offline';
     }
 
-    async function openVideo(url, title) {
+    function openVideo(url, title) {
       currentTitleClean = title;
+      currentFileUrl = url;
       mainTitle.innerText = title;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        currentFileUrl = url;
-        mainPlayer.src = URL.createObjectURL(blob);
-      } catch (err) {
-        currentFileUrl = url;
-        mainPlayer.src = url;
-      }
+      mainPlayer.src = url;
       
       checkSavedState(url);
       safePlay();
