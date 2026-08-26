@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>gitmum</title>
 
-  <!-- Cache-Busted PWA Manifest & Favicon -->
-  <link rel="manifest" href="./manifest.json?v=3">
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#ff0055">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="gitmum">
 
-  <!-- SVG Favicon with cache version query -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- SVG Favicon (No external PNGs needed) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -357,7 +357,7 @@
   <div class="player-section" id="playerSection">
     <div class="player-card">
       <div class="main-video-box">
-        <video id="mainPlayer" preload="auto" playsinline controlsList="nodownload noremoteplayback"></video>
+        <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
       </div>
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
@@ -381,14 +381,12 @@
   </main>
 
   <script>
-    // Force Service Worker Unregister & Re-register to clear bad caches
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.getRegistrations().then(registrations => {
-          for (let registration of registrations) {
-            registration.unregister();
-          }
-        });
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => console.log('SW Registered:', reg.scope))
+          .catch(err => console.error('SW Error:', err));
       });
     }
 
@@ -448,18 +446,13 @@
       fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
-          if (Array.isArray(data)) {
-            allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
-            renderGrid(allFiles);
-          } else {
-            container.innerHTML = '<p id="status">Error reading repository files.</p>';
-          }
+          allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+          renderGrid(allFiles);
         })
         .catch(() => loadOfflineTracks());
     }
 
     async function loadOfflineTracks() {
-      if (!('caches' in window)) return;
       const cache = await caches.open('gitmum-media');
       const keys = await cache.keys();
       
@@ -492,7 +485,7 @@
     }
 
     function renderGrid(files) {
-      if (!files || files.length === 0) {
+      if (files.length === 0) {
         container.innerHTML = '<p id="status">No MP4 tracks found in repository.</p>';
         return;
       }
@@ -501,10 +494,7 @@
         const cleanTitle = file.name.replace(/\.mp4$/i, '');
         const card = document.createElement('div');
         card.className = 'card';
-        
-        // Use raw GitHub usercontent URL directly to avoid CORS blob errors
-        const directUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${encodeURIComponent(file.name)}`;
-        card.onclick = () => openVideo(directUrl, cleanTitle);
+        card.onclick = () => openVideo(file.download_url, cleanTitle);
 
         card.innerHTML = `
           <div class="card-thumb">
@@ -520,7 +510,7 @@
     }
 
     async function downloadTrackLocally() {
-      if (!currentFileUrl || !('caches' in window)) return;
+      if (!currentFileUrl) return;
       downloadAppBtn.innerText = '⏳ Saving...';
       try {
         const cache = await caches.open('gitmum-media');
@@ -532,22 +522,26 @@
     }
 
     async function checkSavedState(url) {
-      if (!('caches' in window)) return;
       const cache = await caches.open('gitmum-media');
       const match = await cache.match(url);
       downloadAppBtn.innerText = match ? '✓ Saved Offline' : '💾 Save Offline';
     }
 
-    function openVideo(url, title) {
+    async function openVideo(url, title) {
       currentTitleClean = title;
-      currentFileUrl = url;
       mainTitle.innerText = title;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Direct stream link bypasses CORS fetch block
-      mainPlayer.src = url;
-      mainPlayer.load();
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        currentFileUrl = url;
+        mainPlayer.src = URL.createObjectURL(blob);
+      } catch (err) {
+        currentFileUrl = url;
+        mainPlayer.src = url;
+      }
       
       checkSavedState(url);
       safePlay();
