@@ -1,48 +1,33 @@
-const CACHE_NAME = 'gitmum-v3-purge';
+const CACHE_NAME = 'gitmum-cache-v2';
+const ASSETS = [
+  './',
+  './index.html?v=2',
+  './manifest.json?v=2'
+];
 
-// Install Phase: Skip waiting immediately
-self.addEventListener('install', (event) => {
-  self.skipWaiting();
-});
-
-// Activate Phase: Find EVERY cache and kill it instantly
-self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames.map((cache) => {
-          // Deletes all old caches without exception
-          console.log('Purging old cache:', cache);
-          return caches.delete(cache);
-        })
-      );
-    }).then(() => {
-      // Force control over all open tabs immediately
-      return self.clients.claim();
-    })
+self.addEventListener('install', (e) => {
+  self.skipWaiting(); // Force new service worker to activate immediately
+  e.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
   );
 });
 
-// Fetch Phase: Network-first approach (always fetch fresh files)
-self.addEventListener('fetch', (event) => {
-  // Skip cross-origin or non-GET requests
-  if (event.request.method !== 'GET') return;
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== CACHE_NAME && key !== 'gitmum-media') {
+            return caches.delete(key); // Clear old cached HTML
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
 
-  event.respondWith(
-    fetch(event.request)
-      .then((networkResponse) => {
-        // Cache the fresh copy on the fly
-        if (networkResponse && networkResponse.status === 200) {
-          const responseToCache = networkResponse.clone();
-          caches.open(CACHE_NAME).then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
-        }
-        return networkResponse;
-      })
-      .catch(() => {
-        // Fallback to cache only if network fails completely (offline mode)
-        return caches.match(event.request);
-      })
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
   );
 });
