@@ -13,7 +13,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="gitmum">
 
-  <!-- SVG Favicon (No external PNGs needed) -->
+  <!-- SVG Favicon -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -357,7 +357,7 @@
   <div class="player-section" id="playerSection">
     <div class="player-card">
       <div class="main-video-box">
-        <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
+        <video id="mainPlayer" controlsList="nodownload noremoteplayback"></video>
       </div>
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
@@ -444,9 +444,17 @@
 
     function fetchOnlineTracks() {
       fetch(apiUrl)
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) throw new Error("API Limit or Network Issue");
+          return res.json();
+        })
         .then(data => {
-          allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+          if (!Array.isArray(data)) {
+            container.innerHTML = '<p id="status">Could not load repository content.</p>';
+            return;
+          }
+          // Match mp4, mov, mkv, webm (case-insensitive)
+          allFiles = data.filter(item => item.type === 'file' && /\.(mp4|mov|mkv|webm)$/i.test(item.name));
           renderGrid(allFiles);
         })
         .catch(() => loadOfflineTracks());
@@ -465,7 +473,7 @@
       keys.forEach(request => {
         const url = request.url;
         const filename = url.substring(url.lastIndexOf('/') + 1);
-        const cleanTitle = decodeURIComponent(filename).replace(/\.mp4$/i, '');
+        const cleanTitle = decodeURIComponent(filename).replace(/\.(mp4|mov|mkv|webm)$/i, '');
 
         const card = document.createElement('div');
         card.className = 'card';
@@ -486,12 +494,12 @@
 
     function renderGrid(files) {
       if (files.length === 0) {
-        container.innerHTML = '<p id="status">No MP4 tracks found in repository.</p>';
+        container.innerHTML = '<p id="status">No video tracks found in repository.</p>';
         return;
       }
       container.innerHTML = '';
       files.forEach(file => {
-        const cleanTitle = file.name.replace(/\.mp4$/i, '');
+        const cleanTitle = file.name.replace(/\.(mp4|mov|mkv|webm)$/i, '');
         const card = document.createElement('div');
         card.className = 'card';
         card.onclick = () => openVideo(file.download_url, cleanTitle);
@@ -527,21 +535,15 @@
       downloadAppBtn.innerText = match ? '✓ Saved Offline' : '💾 Save Offline';
     }
 
-    async function openVideo(url, title) {
+    function openVideo(url, title) {
       currentTitleClean = title;
+      currentFileUrl = url;
       mainTitle.innerText = title;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      try {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        currentFileUrl = url;
-        mainPlayer.src = URL.createObjectURL(blob);
-      } catch (err) {
-        currentFileUrl = url;
-        mainPlayer.src = url;
-      }
+      // Stream directly from raw URL to allow fast playback
+      mainPlayer.src = url;
       
       checkSavedState(url);
       safePlay();
