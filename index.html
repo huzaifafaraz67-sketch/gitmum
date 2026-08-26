@@ -416,11 +416,9 @@
     window.addEventListener('offline', updateNetworkStatus);
 
     function fetchOnlineTracks() {
-      // ⚠️ Add all your uploaded video filenames here inside quotes!
+      // ⚠️ Add new video filenames here ONLY when you upload them to GitHub!
       const videoFiles = [
-        'CUTE DEPRESSED.mp4',
-        'video2.mp4',
-        'video3.mp4'
+        'CUTE DEPRESSED.mp4'
       ];
 
       allFiles = videoFiles.map(filename => {
@@ -455,7 +453,7 @@
 
         card.innerHTML = `
           <div class="card-thumb">
-            <video src="${url}#t=1.0" preload="metadata" muted></video>
+            <video src="${url}#t=0.5" preload="metadata" muted></video>
             <div class="play-overlay">▶</div>
           </div>
           <div class="card-info">
@@ -481,7 +479,7 @@
 
         card.innerHTML = `
           <div class="card-thumb">
-            <video src="${file.download_url}#t=1.0" preload="metadata" muted></video>
+            <video src="${file.download_url}#t=0.5" preload="metadata" muted></video>
             <div class="play-overlay">▶</div>
           </div>
           <div class="card-info">
