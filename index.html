@@ -9,17 +9,17 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      user-select: none; /* Prevents text and media selection */
+      user-select: none;
       -webkit-user-select: none;
     }
     body {
       font-family: 'Roboto', Arial, sans-serif;
-      background-color: #0f0f0f; /* YouTube Dark Mode Background */
+      background-color: #0f0f0f;
       color: #f1f1f1;
       padding: 20px;
     }
-    
-    /* YouTube Style Header */
+
+    /* Header */
     header {
       display: flex;
       align-items: center;
@@ -31,126 +31,79 @@
     .logo {
       display: flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-size: 1.6rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      cursor: pointer;
     }
     .logo-icon {
       background: #ff0055;
       color: #fff;
       padding: 4px 10px;
       border-radius: 6px;
-      font-size: 1.2rem;
     }
-    
-    /* YouTube Style Video Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+
+    /* Main Player Container (Big Screen View) */
+    .player-section {
+      display: none;
+      grid-template-columns: 1fr 350px;
+      gap: 24px;
       max-width: 1400px;
-      margin: 0 auto;
+      margin: 0 auto 40px auto;
     }
-    
-    /* YouTube Video Card */
-    .card {
-      background: #0f0f0f;
-      border-radius: 12px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: transform 0.2s;
+    @media (max-width: 1000px) {
+      .player-section {
+        grid-template-columns: 1fr;
+      }
     }
-    .card:hover {
-      transform: translateY(-2px);
-    }
-    
-    .video-container {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
+
+    .main-video-box {
       background: #000;
       border-radius: 12px;
       overflow: hidden;
+      position: relative;
     }
-    video {
+    video#mainPlayer {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none; /* Prevents right clicking directly on video element */
+      aspect-ratio: 16 / 9;
+      display: block;
+      pointer-events: none;
     }
-    
-    .video-info {
+
+    /* Video Details & Controls Bar */
+    .main-details {
+      margin-top: 15px;
+    }
+    .main-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .player-controls {
       display: flex;
+      align-items: center;
       gap: 12px;
-      padding: 0 4px;
-    }
-    .channel-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #ff0055;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 0.9rem;
-      flex-shrink: 0;
-    }
-    .details {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      overflow: hidden;
-    }
-    .video-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      line-height: 1.3;
-      color: #f1f1f1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-    .channel-name {
-      font-size: 0.8rem;
-      color: #aaa;
-    }
-    
-    /* Custom Controls Overlay */
-    .controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       background: #212121;
-      padding: 8px 12px;
+      padding: 10px 15px;
       border-radius: 8px;
-      margin-top: 4px;
+      margin-top: 10px;
     }
     .btn {
       background: none;
       border: none;
       color: #fff;
       cursor: pointer;
-      font-size: 1rem;
+      font-size: 1.1rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-    }
-    .btn:hover {
-      background: #383838;
     }
     .progress-bar {
       flex: 1;
       -webkit-appearance: none;
       appearance: none;
-      height: 4px;
-      border-radius: 2px;
+      height: 5px;
+      border-radius: 3px;
       background: #4c4c4c;
       outline: none;
       cursor: pointer;
@@ -158,10 +111,68 @@
     .progress-bar::-webkit-slider-thumb {
       -webkit-appearance: none;
       appearance: none;
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #ff0055;
+    }
+
+    /* Dropdown Menus (Quality & Speed) */
+    select.setting-select {
+      background: #383838;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Up Next Sidebar / Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #0f0f0f;
+      border-radius: 12px;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+    }
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #1e1e1e;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #ff0055;
+    }
+    .card-info {
+      padding: 10px 4px;
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-author {
+      font-size: 0.8rem;
+      color: #aaa;
+      margin-top: 3px;
     }
 
     #status {
@@ -172,14 +183,55 @@
     }
   </style>
 </head>
-<body oncontextmenu="return false;"> <!-- Right Click Blocked -->
+<body oncontextmenu="return false;">
 
   <header>
-    <div class="logo">
+    <div class="logo" onclick="closePlayer()">
       <span class="logo-icon">▶</span> gitmum
     </div>
   </header>
 
+  <!-- Big Screen Player Section -->
+  <div class="player-section" id="playerSection">
+    <div>
+      <div class="main-video-box">
+        <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
+      </div>
+      <div class="main-details">
+        <h2 class="main-title" id="mainTitle">Track Title</h2>
+        <div class="player-controls">
+          <button class="btn" id="playBtn" onclick="togglePlay()">▶</button>
+          <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
+          <button class="btn" id="muteBtn" onclick="toggleMute()">🔊</button>
+          
+          <!-- Quality Menu -->
+          <select class="setting-select" id="qualitySelect" onchange="changeQuality(this.value)">
+            <option value="1080p">1080p HD</option>
+            <option value="720p" selected>720p</option>
+            <option value="480p">480p</option>
+            <option value="360p">360p</option>
+          </select>
+
+          <!-- Speed Menu -->
+          <select class="setting-select" id="speedSelect" onchange="changeSpeed(this.value)">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1.0x (Normal)</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2.0x</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Sidebar Tracks -->
+    <div id="sidebarList">
+      <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Up Next</h3>
+      <div id="nextContainer" style="display: flex; flex-direction: column; gap: 15px;"></div>
+    </div>
+  </div>
+
+  <!-- Video Grid -->
   <main class="grid" id="songContainer">
     <p id="status">Loading videos...</p>
   </main>
@@ -188,11 +240,20 @@
     const username = 'huzaifafaraz67-sketch';
     const repoName = 'gitmum';
     const apiUrl = `https://api.github.com/repos/${username}/${repoName}/contents/`;
-    const container = document.getElementById('songContainer');
 
-    // 1. Block Keyboard Shortcuts for Saving/Inspecting
+    const container = document.getElementById('songContainer');
+    const playerSection = document.getElementById('playerSection');
+    const mainPlayer = document.getElementById('mainPlayer');
+    const mainTitle = document.getElementById('mainTitle');
+    const playBtn = document.getElementById('playBtn');
+    const muteBtn = document.getElementById('muteBtn');
+    const seekBar = document.getElementById('seekBar');
+
+    let currentFileUrl = '';
+    let allFiles = [];
+
+    // Block save keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-      // Block Ctrl+S, Ctrl+U, Ctrl+Shift+I, F12
       if (
         (e.ctrlKey && (e.key === 's' || e.key === 'u')) || 
         (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.key === 'J' || e.key === 'j')) ||
@@ -202,90 +263,122 @@
       }
     });
 
-    // 2. Fetch Repo Contents
+    // Fetch repository videos
     fetch(apiUrl)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch files');
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        const mp4Files = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+        allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
 
-        if (mp4Files.length === 0) {
-          container.innerHTML = '<p id="status">No videos found.</p>';
+        if (allFiles.length === 0) {
+          container.innerHTML = '<p id="status">No MP4 files found in the root directory.</p>';
           return;
         }
 
         container.innerHTML = '';
 
-        mp4Files.forEach((file, id) => {
+        allFiles.forEach(file => {
           const cleanTitle = file.name.replace(/\.mp4$/i, '');
           const card = document.createElement('div');
           card.className = 'card';
+          card.onclick = () => openVideo(file.download_url, cleanTitle);
 
           card.innerHTML = `
-            <div class="video-container">
-              <!-- nodownload & noremoteplayback attributes -->
-              <video id="vid-${id}" preload="metadata" controlsList="nodownload noremoteplayback">
-                <source src="${file.download_url}" type="video/mp4">
-              </video>
-            </div>
-            <div class="video-info">
-              <div class="channel-avatar">G</div>
-              <div class="details">
-                <div class="video-title" title="${cleanTitle}">${cleanTitle}</div>
-                <div class="channel-name">gitmum • Funk</div>
-              </div>
-            </div>
-            <div class="controls">
-              <button class="btn" onclick="togglePlay('vid-${id}', this)">▶</button>
-              <input type="range" class="progress-bar" id="seek-${id}" value="0" min="0" max="100" oninput="seekVideo('vid-${id}', this.value)">
-              <button class="btn" onclick="toggleMute('vid-${id}', this)">🔊</button>
+            <div class="card-thumb">▶</div>
+            <div class="card-info">
+              <div class="card-title">${cleanTitle}</div>
+              <div class="card-author">gitmum • Funk</div>
             </div>
           `;
           container.appendChild(card);
-
-          // Update seek bar during playback
-          const vid = document.getElementById(`vid-${id}`);
-          const seek = document.getElementById(`seek-${id}`);
-
-          vid.addEventListener('timeupdate', () => {
-            if (vid.duration) {
-              seek.value = (vid.currentTime / vid.duration) * 100;
-            }
-          });
         });
       })
       .catch(err => {
-        console.error(err);
         container.innerHTML = '<p id="status">Error loading videos.</p>';
       });
 
-    // Video Controls
-    function togglePlay(id, btn) {
-      const vid = document.getElementById(id);
-      if (vid.paused) {
-        vid.play();
-        btn.innerText = '❚❚';
+    // Open video on Big Screen
+    function openVideo(url, title) {
+      currentFileUrl = url;
+      mainPlayer.src = url;
+      mainTitle.innerText = title;
+      playerSection.style.display = 'grid';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      mainPlayer.play();
+      playBtn.innerText = '❚❚';
+
+      renderUpNext(title);
+    }
+
+    function closePlayer() {
+      mainPlayer.pause();
+      playerSection.style.display = 'none';
+    }
+
+    function renderUpNext(currentTitle) {
+      const nextContainer = document.getElementById('nextContainer');
+      nextContainer.innerHTML = '';
+
+      allFiles.forEach(file => {
+        const cleanTitle = file.name.replace(/\.mp4$/i, '');
+        if (cleanTitle === currentTitle) return;
+
+        const item = document.createElement('div');
+        item.style.cssText = 'display: flex; gap: 10px; cursor: pointer;';
+        item.onclick = () => openVideo(file.download_url, cleanTitle);
+
+        item.innerHTML = `
+          <div style="width: 120px; aspect-ratio: 16/9; background: #222; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #ff0055;">▶</div>
+          <div>
+            <div style="font-size: 0.85rem; font-weight: 600;">${cleanTitle}</div>
+            <div style="font-size: 0.75rem; color: #aaa;">gitmum</div>
+          </div>
+        `;
+        nextContainer.appendChild(item);
+      });
+    }
+
+    // Playback Controls
+    function togglePlay() {
+      if (mainPlayer.paused) {
+        mainPlayer.play();
+        playBtn.innerText = '❚❚';
       } else {
-        vid.pause();
-        btn.innerText = '▶';
+        mainPlayer.pause();
+        playBtn.innerText = '▶';
       }
     }
 
-    function toggleMute(id, btn) {
-      const vid = document.getElementById(id);
-      vid.muted = !vid.muted;
-      btn.innerText = vid.muted ? '🔇' : '🔊';
+    function toggleMute() {
+      mainPlayer.muted = !mainPlayer.muted;
+      muteBtn.innerText = mainPlayer.muted ? '🔇' : '🔊';
     }
 
-    function seekVideo(id, value) {
-      const vid = document.getElementById(id);
-      if (vid.duration) {
-        vid.currentTime = (value / 100) * vid.duration;
+    function seekVideo(val) {
+      if (mainPlayer.duration) {
+        mainPlayer.currentTime = (val / 100) * mainPlayer.duration;
       }
+    }
+
+    mainPlayer.addEventListener('timeupdate', () => {
+      if (mainPlayer.duration) {
+        seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
+      }
+    });
+
+    // Settings Functions
+    function changeSpeed(val) {
+      mainPlayer.playbackRate = parseFloat(val);
+    }
+
+    function changeQuality(val) {
+      const currentTime = mainPlayer.currentTime;
+      const isPaused = mainPlayer.paused;
+      
+      // Reload stream maintaining seek timestamp
+      mainPlayer.src = currentFileUrl;
+      mainPlayer.currentTime = currentTime;
+      if (!isPaused) mainPlayer.play();
     }
   </script>
-
 </body>
 </html>
