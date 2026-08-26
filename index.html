@@ -2,276 +2,445 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>gitmum</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>gitmum - NextGen Funk Hub</title>
 
+  <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#ff0055">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="gitmum">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>▶</text></svg>">
+  <!-- Dynamic SVG Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   
+  <!-- Modern Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg-dark: #0a0a0c;
+      --bg-card: rgba(22, 22, 29, 0.7);
+      --bg-card-hover: rgba(35, 35, 48, 0.9);
+      --accent: #ff0055;
+      --accent-glow: rgba(255, 0, 85, 0.4);
+      --accent-alt: #7928ca;
+      --text-main: #f8f9fa;
+      --text-muted: #a1a1aa;
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 8px;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
-    }
-    body {
-      font-family: 'Roboto', Arial, sans-serif;
-      background-color: #0f0f0f;
-      color: #f1f1f1;
-      padding: 20px;
+      -webkit-tap-highlight-color: transparent;
     }
 
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(255, 0, 85, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(121, 40, 202, 0.12) 0px, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 20px;
+      padding-bottom: 120px;
+    }
+
+    /* Glassmorphic Header */
     header {
+      position: sticky;
+      top: 15px;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 25px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #272727;
+      padding: 14px 24px;
+      background: rgba(15, 15, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
+
     .logo {
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 1.6rem;
-      font-weight: 700;
+      gap: 12px;
+      font-size: 1.4rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
       cursor: pointer;
     }
-    .logo-icon {
-      background: #ff0055;
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
-      padding: 4px 10px;
-      border-radius: 6px;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-size: 1rem;
+      box-shadow: 0 0 15px var(--accent-glow);
     }
 
     .install-btn {
-      background: #ff0055;
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
       border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 0.88rem;
       cursor: pointer;
       display: none;
+      box-shadow: 0 4px 20px var(--accent-glow);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
 
-    /* Offline Banner Notice */
+    .install-btn:active {
+      transform: scale(0.95);
+    }
+
+    /* Network Offline Notice Banner */
     #offlineNotice {
       display: none;
-      background: #2a151b;
-      border: 1px solid #ff0055;
+      background: rgba(255, 0, 85, 0.1);
+      border: 1px solid var(--accent);
       color: #ff80a5;
-      padding: 15px;
-      border-radius: 10px;
+      padding: 16px;
+      border-radius: var(--radius-md);
       text-align: center;
-      margin-bottom: 20px;
-    }
-    .offline-icon {
-      font-size: 2.5rem;
-      margin-bottom: 5px;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
     }
 
+    /* Next-Level Media Player Section */
     .player-section {
       display: none;
-      grid-template-columns: 1fr 350px;
-      gap: 24px;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
       max-width: 1400px;
       margin: 0 auto 40px auto;
+      animation: fadeIn 0.4s ease-out;
     }
-    @media (max-width: 1000px) {
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1024px) {
       .player-section {
         grid-template-columns: 1fr;
       }
     }
 
+    .player-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
     .main-video-box {
       background: #000;
-      border-radius: 12px;
+      border-radius: var(--radius-md);
       overflow: hidden;
       position: relative;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
+
     video#mainPlayer {
       width: 100%;
       aspect-ratio: 16 / 9;
       display: block;
-      pointer-events: none;
     }
 
     .main-details {
-      margin-top: 15px;
-    }
-    .main-title {
-      font-size: 1.3rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .player-controls {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: #212121;
-      padding: 10px 15px;
-      border-radius: 8px;
-      margin-top: 10px;
-      flex-wrap: wrap;
-    }
-    .btn {
-      background: none;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-size: 1.1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .inapp-download-btn {
-      background: #272727;
-      border: 1px solid #444;
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    .progress-bar {
-      flex: 1;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 5px;
-      border-radius: 3px;
-      background: #4c4c4c;
-      outline: none;
-      cursor: pointer;
-    }
-    .progress-bar::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #ff0055;
+      margin-top: 20px;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      max-width: 1400px;
-      margin: 0 auto;
-    }
-    .card {
-      background: #0f0f0f;
-      border-radius: 12px;
-      cursor: pointer;
-      overflow: hidden;
-      transition: transform 0.2s;
-    }
-    .card:hover {
-      transform: translateY(-3px);
-    }
-    .card-thumb {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-      background: #1e1e1e;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 2rem;
-      color: #ff0055;
-    }
-    .card-info {
-      padding: 10px 4px;
-    }
-    .card-title {
-      font-size: 0.95rem;
-      font-weight: 600;
+    .main-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
-    .card-status-badge {
-      font-size: 0.75rem;
-      color: #00ff88;
-      margin-top: 4px;
+
+    /* Custom Player Control Suite */
+    .player-controls {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--glass-border);
+    }
+
+    .btn-circle {
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+      border: none;
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: transform 0.2s;
+    }
+
+    .btn-circle:active {
+      transform: scale(0.9);
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .progress-bar {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.15);
+      outline: none;
+      cursor: pointer;
+    }
+
+    .progress-bar::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      cursor: pointer;
+    }
+
+    .save-offline-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .save-offline-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Grid Layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 22px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Interactive Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+      backdrop-filter: blur(10px);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 0, 85, 0.4);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+    }
+
+    .card-thumb {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: linear-gradient(135deg, #181824, #101018);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      color: var(--accent);
+    }
+
+    .card-thumb::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
+    }
+
+    .play-overlay {
+      position: relative;
+      z-index: 2;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 0, 85, 0.85);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      box-shadow: 0 0 20px var(--accent-glow);
+      transition: transform 0.2s;
+    }
+
+    .card:hover .play-overlay {
+      transform: scale(1.1);
+    }
+
+    .card-info {
+      padding: 16px;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .card-meta {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-offline {
+      color: #00ffaa;
+      font-size: 0.78rem;
+      font-weight: 600;
     }
 
     #status {
       text-align: center;
       grid-column: 1 / -1;
-      color: #aaa;
-      margin-top: 40px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      padding: 60px 0;
     }
   </style>
 </head>
 <body oncontextmenu="return false;">
 
+  <!-- Header -->
   <header>
     <div class="logo" onclick="closePlayer()">
-      <span class="logo-icon">▶</span> gitmum
+      <div class="logo-badge">⚡</div>
+      <span>gitmum</span>
     </div>
-    <button class="install-btn" id="installBtn">Install App</button>
+    <button class="install-btn" id="installBtn">⚡ Install App</button>
   </header>
 
-  <!-- Offline Network Overlay Banner -->
+  <!-- Network Offline Notice -->
   <div id="offlineNotice">
-    <div class="offline-icon">📡❌</div>
-    <h3>No Connection</h3>
-    <p>Showing in-app downloaded media. Network feature updates will resume when online.</p>
+    <h3>📡 Offline Mode Active</h3>
+    <p>Showing local tracks saved on your device.</p>
   </div>
 
+  <!-- Player Hub -->
   <div class="player-section" id="playerSection">
-    <div>
+    <div class="player-card">
       <div class="main-video-box">
         <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
       </div>
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
         <div class="player-controls">
-          <button class="btn" id="playBtn" onclick="togglePlay()">▶</button>
+          <button class="btn-circle" id="playBtn" onclick="togglePlay()">▶</button>
           <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
-          <button class="btn" id="muteBtn" onclick="toggleMute()">🔊</button>
-          <button class="inapp-download-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">💾 Save Offline</button>
+          <button class="btn-icon" id="muteBtn" onclick="toggleMute()">🔊</button>
+          <button class="save-offline-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">💾 Save Offline</button>
         </div>
       </div>
     </div>
     
-    <div id="sidebarList">
-      <h3 style="margin-bottom: 15px; font-size: 1.1rem;">Up Next</h3>
-      <div id="nextContainer" style="display: flex; flex-direction: column; gap: 15px;"></div>
+    <div class="player-card" id="sidebarList">
+      <h3 style="margin-bottom: 18px; font-size: 1.1rem; font-weight: 700;">Up Next</h3>
+      <div id="nextContainer" style="display: flex; flex-direction: column; gap: 14px;"></div>
     </div>
   </div>
 
+  <!-- Main Grid -->
   <main class="grid" id="songContainer">
-    <p id="status">Loading videos...</p>
+    <p id="status">Syncing library...</p>
   </main>
 
   <script>
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed:', err));
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => console.log('SW Registered:', reg.scope))
+          .catch(err => console.error('SW Error:', err));
+      });
     }
 
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
       installBtn.style.display = 'block';
     });
+
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
+        deferredPrompt.userChoice.then((result) => {
+          if (result.outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
           deferredPrompt = null;
-          installBtn.style.display = 'none';
         });
       }
     });
@@ -294,7 +463,6 @@
     let currentTitleClean = '';
     let allFiles = [];
 
-    // Offline / Online network state handlers
     function updateNetworkStatus() {
       if (!navigator.onLine) {
         offlineNotice.style.display = 'block';
@@ -308,7 +476,6 @@
     window.addEventListener('online', updateNetworkStatus);
     window.addEventListener('offline', updateNetworkStatus);
 
-    // Load from GitHub API when online
     function fetchOnlineTracks() {
       fetch(apiUrl)
         .then(res => res.json())
@@ -319,13 +486,12 @@
         .catch(() => loadOfflineTracks());
     }
 
-    // Load saved tracks from Cache Storage when offline
     async function loadOfflineTracks() {
       const cache = await caches.open('gitmum-media');
       const keys = await cache.keys();
       
       if (keys.length === 0) {
-        container.innerHTML = '<p id="status">No internet connection and no in-app downloaded tracks saved.</p>';
+        container.innerHTML = '<p id="status">No saved offline tracks found.</p>';
         return;
       }
 
@@ -340,10 +506,12 @@
         card.onclick = () => openVideo(url, cleanTitle);
 
         card.innerHTML = `
-          <div class="card-thumb">▶</div>
+          <div class="card-thumb">
+            <div class="play-overlay">▶</div>
+          </div>
           <div class="card-info">
             <div class="card-title">${cleanTitle}</div>
-            <div class="card-status-badge">⚡ Downloaded Offline</div>
+            <div class="card-meta"><span class="badge-offline">⚡ Saved Offline</span></div>
           </div>
         `;
         container.appendChild(card);
@@ -352,7 +520,7 @@
 
     function renderGrid(files) {
       if (files.length === 0) {
-        container.innerHTML = '<p id="status">No MP4 files found.</p>';
+        container.innerHTML = '<p id="status">No MP4 tracks found in repository.</p>';
         return;
       }
       container.innerHTML = '';
@@ -363,24 +531,25 @@
         card.onclick = () => openVideo(file.download_url, cleanTitle);
 
         card.innerHTML = `
-          <div class="card-thumb">▶</div>
+          <div class="card-thumb">
+            <div class="play-overlay">▶</div>
+          </div>
           <div class="card-info">
             <div class="card-title">${cleanTitle}</div>
-            <div class="card-author">gitmum • Funk</div>
+            <div class="card-meta">gitmum • Media</div>
           </div>
         `;
         container.appendChild(card);
       });
     }
 
-    // Download video directly to App Storage
     async function downloadTrackLocally() {
       if (!currentFileUrl) return;
-      downloadAppBtn.innerText = '⏳ Downloading...';
+      downloadAppBtn.innerText = '⏳ Saving...';
       try {
         const cache = await caches.open('gitmum-media');
         await cache.add(currentFileUrl);
-        downloadAppBtn.innerText = '✓ Saved in App';
+        downloadAppBtn.innerText = '✓ Saved Offline';
       } catch (err) {
         downloadAppBtn.innerText = '❌ Failed';
       }
@@ -389,21 +558,25 @@
     async function checkSavedState(url) {
       const cache = await caches.open('gitmum-media');
       const match = await cache.match(url);
-      if (match) {
-        downloadAppBtn.innerText = '✓ Saved in App';
-      } else {
-        downloadAppBtn.innerText = '💾 Save Offline';
-      }
+      downloadAppBtn.innerText = match ? '✓ Saved Offline' : '💾 Save Offline';
     }
 
-    function openVideo(url, title) {
-      currentFileUrl = url;
+    async function openVideo(url, title) {
       currentTitleClean = title;
-      mainPlayer.src = url;
       mainTitle.innerText = title;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        currentFileUrl = url;
+        mainPlayer.src = URL.createObjectURL(blob);
+      } catch (err) {
+        currentFileUrl = url;
+        mainPlayer.src = url;
+      }
+      
       checkSavedState(url);
       safePlay();
     }
@@ -437,7 +610,6 @@
       if (mainPlayer.duration) seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
     });
 
-    // Initialize network status on startup
     updateNetworkStatus();
   </script>
 </body>
