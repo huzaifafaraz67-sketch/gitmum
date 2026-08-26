@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>gitmum - Next Level Hub</title>
+  <title>gitmum</title>
 
   <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="./manifest.json">
@@ -12,8 +12,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- SVG Favicon -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <!-- Pure SVG 4K Scalable Favicon -->
+  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><defs><linearGradient id='g' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23ff0055'/><stop offset='100%' stop-color='%237928ca'/></linearGradient></defs><rect width='100' height='100' rx='25' fill='url(%23g)'/><polygon points='38,28 75,50 38,72' fill='%23ffffff'/></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,16 +21,16 @@
 
   <style>
     :root {
-      --bg-dark: #08080a;
-      --bg-card: rgba(20, 20, 28, 0.7);
+      --bg-dark: #050508;
+      --bg-card: rgba(18, 18, 26, 0.75);
       --accent: #ff0055;
-      --accent-glow: rgba(255, 0, 85, 0.45);
+      --accent-glow: rgba(255, 0, 85, 0.5);
       --accent-alt: #7928ca;
       --text-main: #f8f9fa;
-      --text-muted: #a1a1aa;
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --radius-lg: 20px;
-      --radius-md: 14px;
+      --text-muted: #8e8e99;
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --radius-lg: 24px;
+      --radius-md: 16px;
     }
 
     * {
@@ -46,12 +46,12 @@
       font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 0% 0%, rgba(255, 0, 85, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(121, 40, 202, 0.15) 0px, transparent 50%);
+        radial-gradient(at 10% 10%, rgba(255, 0, 85, 0.18) 0px, transparent 40%),
+        radial-gradient(at 90% 90%, rgba(121, 40, 202, 0.18) 0px, transparent 40%);
       background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
-      padding: 20px;
+      padding: 24px;
       padding-bottom: 120px;
     }
 
@@ -62,21 +62,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 14px 24px;
-      background: rgba(15, 15, 20, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      padding: 16px 28px;
+      background: rgba(12, 12, 18, 0.8);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
-      margin-bottom: 30px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 35px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-size: 1.4rem;
+      gap: 14px;
+      font-size: 1.5rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       cursor: pointer;
@@ -85,40 +85,49 @@
     .logo-badge {
       background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
-      font-size: 1rem;
-      box-shadow: 0 0 15px var(--accent-glow);
+      border-radius: 12px;
+      box-shadow: 0 0 20px var(--accent-glow);
+    }
+
+    .svg-icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
     }
 
     .install-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 22px;
       border-radius: 30px;
       font-weight: 700;
       font-size: 0.88rem;
       cursor: pointer;
       display: none;
       box-shadow: 0 4px 20px var(--accent-glow);
+      transition: transform 0.2s;
     }
 
-    /* Modern Video Player Layout */
+    .install-btn:active {
+      transform: scale(0.95);
+    }
+
     .player-section {
       display: none;
       grid-template-columns: 1fr;
       max-width: 1100px;
       margin: 0 auto 40px auto;
-      animation: fadeIn 0.4s ease-out;
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -127,9 +136,8 @@
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
       padding: 24px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-      position: relative;
+      backdrop-filter: blur(30px);
+      box-shadow: 0 30px 60px rgba(0,0,0,0.7);
     }
 
     .main-video-box {
@@ -137,7 +145,7 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       position: relative;
-      box-shadow: 0 0 30px var(--accent-glow);
+      box-shadow: 0 0 35px var(--accent-glow);
       border: 1px solid rgba(255, 0, 85, 0.3);
     }
 
@@ -155,19 +163,18 @@
     .main-title {
       font-size: 1.5rem;
       font-weight: 800;
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    /* Custom Player Control Suite */
     .custom-controls {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      background: rgba(10, 10, 15, 0.8);
-      padding: 16px 20px;
+      gap: 14px;
+      background: rgba(8, 8, 12, 0.85);
+      padding: 18px 22px;
       border-radius: var(--radius-md);
       border: 1px solid var(--glass-border);
     }
@@ -175,7 +182,7 @@
     .progress-container {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
     }
 
     .time-stamp {
@@ -223,15 +230,14 @@
       background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       border: none;
       color: #fff;
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
       cursor: pointer;
-      box-shadow: 0 4px 15px var(--accent-glow);
+      box-shadow: 0 4px 18px var(--accent-glow);
       transition: transform 0.2s;
     }
 
@@ -243,37 +249,47 @@
       background: rgba(255, 255, 255, 0.05);
       border: 1px solid var(--glass-border);
       color: var(--text-main);
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      font-size: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.2s;
     }
 
     .btn-icon:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-icon:active {
+      transform: scale(0.92);
     }
 
     .save-offline-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--glass-border);
       color: var(--text-main);
-      padding: 8px 16px;
+      padding: 10px 18px;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
     }
 
-    /* Grid Layout */
+    .save-offline-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 22px;
+      gap: 24px;
       max-width: 1400px;
       margin: 0 auto;
     }
@@ -284,39 +300,40 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.25s, border-color 0.25s;
-      backdrop-filter: blur(10px);
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+      backdrop-filter: blur(15px);
     }
 
     .card:hover {
       transform: translateY(-6px);
       border-color: rgba(255, 0, 85, 0.4);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
     }
 
     .card-thumb {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, #181824, #101018);
+      background: linear-gradient(135deg, #14141f, #0c0c14);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .play-overlay {
-      width: 50px;
-      height: 50px;
-      background: rgba(255, 0, 85, 0.85);
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 0, 85, 0.9);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      box-shadow: 0 0 20px var(--accent-glow);
+      box-shadow: 0 0 25px var(--accent-glow);
     }
 
     .card-info {
-      padding: 16px;
+      padding: 18px;
     }
 
     .card-title {
@@ -325,7 +342,7 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 4px;
+      margin-bottom: 6px;
     }
 
     .card-meta {
@@ -346,10 +363,12 @@
 
   <header>
     <div class="logo" onclick="closePlayer()">
-      <div class="logo-badge">⚡</div>
+      <div class="logo-badge">
+        <svg class="svg-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+      </div>
       <span>gitmum</span>
     </div>
-    <button class="install-btn" id="installBtn">⚡ Install App</button>
+    <button class="install-btn" id="installBtn">Install App</button>
   </header>
 
   <div class="player-section" id="playerSection">
@@ -360,7 +379,6 @@
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
         
-        <!-- Custom Controls Suite -->
         <div class="custom-controls">
           <div class="progress-container">
             <span class="time-stamp" id="currentTime">0:00</span>
@@ -370,15 +388,28 @@
           
           <div class="controls-row">
             <div class="controls-left">
-              <button class="btn-circle" id="playBtn" onclick="togglePlay()">▶</button>
-              <button class="btn-icon" onclick="skipTime(-10)">⏪</button>
-              <button class="btn-icon" onclick="skipTime(10)">⏩</button>
-              <button class="btn-icon" id="muteBtn" onclick="toggleMute()">🔊</button>
+              <button class="btn-circle" id="playBtn" onclick="togglePlay()">
+                <svg class="svg-icon" id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <button class="btn-icon" onclick="skipTime(-10)">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+              </button>
+              <button class="btn-icon" onclick="skipTime(10)">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+              </button>
+              <button class="btn-icon" id="muteBtn" onclick="toggleMute()">
+                <svg class="svg-icon" id="muteIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+              </button>
             </div>
             
             <div class="controls-right">
-              <button class="save-offline-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">💾 Save Offline</button>
-              <button class="btn-icon" onclick="toggleFullscreen()">⛶</button>
+              <button class="save-offline-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                <span id="saveBtnText">Save Offline</span>
+              </button>
+              <button class="btn-icon" onclick="toggleFullscreen()">
+                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+              </button>
             </div>
           </div>
         </div>
@@ -394,6 +425,7 @@
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js', { scope: './' })
+          .then(reg => { reg.update(); })
           .catch(err => console.error('SW Error:', err));
       });
     }
@@ -425,14 +457,19 @@
     const playerSection = document.getElementById('playerSection');
     const mainPlayer = document.getElementById('mainPlayer');
     const mainTitle = document.getElementById('mainTitle');
-    const playBtn = document.getElementById('playBtn');
-    const muteBtn = document.getElementById('muteBtn');
+    const playIcon = document.getElementById('playIcon');
+    const muteIcon = document.getElementById('muteIcon');
     const seekBar = document.getElementById('seekBar');
     const currentTimeEl = document.getElementById('currentTime');
     const durationTimeEl = document.getElementById('durationTime');
-    const downloadAppBtn = document.getElementById('downloadAppBtn');
+    const saveBtnText = document.getElementById('saveBtnText');
 
     let currentFileUrl = '';
+
+    const iconPlay = 'M8 5v14l11-7z';
+    const iconPause = 'M6 19h4V5H6v14zm8-14v14h4V5h-4z';
+    const iconVolOn = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z';
+    const iconVolMute = 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z';
 
     function fetchTracks() {
       fetch(apiUrl)
@@ -462,11 +499,13 @@
 
         card.innerHTML = `
           <div class="card-thumb">
-            <div class="play-overlay">▶</div>
+            <div class="play-overlay">
+              <svg class="svg-icon" viewBox="0 0 24 24"><path d="${iconPlay}"/></svg>
+            </div>
           </div>
           <div class="card-info">
             <div class="card-title">${cleanTitle}</div>
-            <div class="card-meta">gitmum • Funk</div>
+            <div class="card-meta">gitmum • Media</div>
           </div>
         `;
         container.appendChild(card);
@@ -488,16 +527,25 @@
     }
 
     function safePlay() {
-      mainPlayer.play().then(() => playBtn.innerText = '❚❚').catch(() => playBtn.innerText = '▶');
+      mainPlayer.play().then(() => {
+        playIcon.setAttribute('d', iconPause);
+      }).catch(() => {
+        playIcon.setAttribute('d', iconPlay);
+      });
     }
 
     function togglePlay() {
-      if (mainPlayer.paused) { safePlay(); } else { mainPlayer.pause(); playBtn.innerText = '▶'; }
+      if (mainPlayer.paused) {
+        safePlay();
+      } else {
+        mainPlayer.pause();
+        playIcon.setAttribute('d', iconPlay);
+      }
     }
 
     function toggleMute() {
       mainPlayer.muted = !mainPlayer.muted;
-      muteBtn.innerText = mainPlayer.muted ? '🔇' : '🔊';
+      muteIcon.setAttribute('d', mainPlayer.muted ? iconVolMute : iconVolOn);
     }
 
     function skipTime(val) {
@@ -533,13 +581,13 @@
 
     async function downloadTrackLocally() {
       if (!currentFileUrl) return;
-      downloadAppBtn.innerText = '⏳ Saving...';
+      saveBtnText.innerText = 'Saving...';
       try {
         const cache = await caches.open('gitmum-media');
         await cache.add(currentFileUrl);
-        downloadAppBtn.innerText = '✓ Saved Offline';
+        saveBtnText.innerText = 'Saved Offline';
       } catch (err) {
-        downloadAppBtn.innerText = '❌ Failed';
+        saveBtnText.innerText = 'Failed';
       }
     }
 
