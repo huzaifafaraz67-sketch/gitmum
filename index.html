@@ -6,14 +6,15 @@
   <title>gitmum</title>
 
   <!-- PWA & Mobile Meta Tags -->
-  <link rel="manifest" href="./manifest.json">
+  <link rel="manifest" href="./manifest.json?v=2">
   <meta name="theme-color" content="#e95420">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="gitmum">
 
   <!-- Ubuntu Vector Favicon -->
-  <link id="dynamicFavicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,16 +22,16 @@
 
   <style>
     :root {
-      --bg-dark: #07070a;
-      --bg-card: rgba(18, 18, 26, 0.75);
+      --bg-dark: #0a0a0c;
+      --bg-card: rgba(22, 22, 29, 0.75);
       --accent: #e95420;
-      --accent-glow: rgba(233, 84, 32, 0.5);
+      --accent-glow: rgba(233, 84, 32, 0.4);
       --accent-alt: #77216f;
       --text-main: #f8f9fa;
-      --text-muted: #8e8e99;
-      --glass-border: rgba(255, 255, 255, 0.1);
-      --radius-lg: 24px;
-      --radius-md: 16px;
+      --text-muted: #a1a1aa;
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --radius-lg: 20px;
+      --radius-md: 14px;
     }
 
     * {
@@ -43,15 +44,15 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       background-color: var(--bg-dark);
       background-image: 
-        radial-gradient(at 10% 10%, rgba(233, 84, 32, 0.18) 0px, transparent 40%),
-        radial-gradient(at 90% 90%, rgba(119, 33, 111, 0.18) 0px, transparent 40%);
+        radial-gradient(at 0% 0%, rgba(233, 84, 32, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(119, 33, 111, 0.15) 0px, transparent 50%);
       background-attachment: fixed;
       color: var(--text-main);
       min-height: 100vh;
-      padding: 24px;
+      padding: 20px;
       padding-bottom: 120px;
     }
 
@@ -62,21 +63,21 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 28px;
-      background: rgba(12, 12, 18, 0.8);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      padding: 14px 24px;
+      background: rgba(15, 15, 20, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
-      margin-bottom: 35px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      margin-bottom: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
 
     .logo {
       display: flex;
       align-items: center;
-      gap: 14px;
-      font-size: 1.5rem;
+      gap: 12px;
+      font-size: 1.4rem;
       font-weight: 800;
       letter-spacing: -0.5px;
       cursor: pointer;
@@ -85,26 +86,28 @@
     .logo-badge {
       background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 50%;
-      box-shadow: 0 0 20px var(--accent-glow);
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--accent-glow);
     }
 
-    .svg-icon {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
+    .logo-badge svg {
+      width: 24px;
+      height: 24px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 7;
     }
 
     .install-btn {
       background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #fff;
       border: none;
-      padding: 10px 22px;
+      padding: 10px 20px;
       border-radius: 30px;
       font-weight: 700;
       font-size: 0.88rem;
@@ -118,26 +121,45 @@
       transform: scale(0.95);
     }
 
+    #offlineNotice {
+      display: none;
+      background: rgba(233, 84, 32, 0.1);
+      border: 1px solid var(--accent);
+      color: #ff9d7d;
+      padding: 16px;
+      border-radius: var(--radius-md);
+      text-align: center;
+      margin-bottom: 25px;
+      backdrop-filter: blur(10px);
+    }
+
     .player-section {
       display: none;
-      grid-template-columns: 1fr;
-      max-width: 1100px;
+      grid-template-columns: 1fr 380px;
+      gap: 28px;
+      max-width: 1400px;
       margin: 0 auto 40px auto;
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      animation: fadeIn 0.4s ease-out;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(15px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 1024px) {
+      .player-section {
+        grid-template-columns: 1fr;
+      }
     }
 
     .player-card {
       background: var(--bg-card);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-lg);
-      padding: 24px;
-      backdrop-filter: blur(30px);
-      box-shadow: 0 30px 60px rgba(0,0,0,0.7);
+      padding: 20px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
     .main-video-box {
@@ -145,15 +167,13 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       position: relative;
-      box-shadow: 0 0 35px var(--accent-glow);
-      border: 1px solid rgba(233, 84, 32, 0.3);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
 
     video#mainPlayer {
       width: 100%;
       aspect-ratio: 16 / 9;
       display: block;
-      cursor: pointer;
     }
 
     .main-details {
@@ -161,35 +181,51 @@
     }
 
     .main-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-bottom: 18px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 16px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .custom-controls {
+    .player-controls {
       display: flex;
-      flex-direction: column;
-      gap: 14px;
-      background: rgba(8, 8, 12, 0.85);
-      padding: 18px 22px;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 12px 18px;
       border-radius: var(--radius-md);
       border: 1px solid var(--glass-border);
     }
 
-    .progress-container {
+    .btn-circle {
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+      border: none;
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 14px;
+      justify-content: center;
+      font-size: 1.1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px var(--accent-glow);
+      transition: transform 0.2s;
     }
 
-    .time-stamp {
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      min-width: 45px;
+    .btn-circle:active {
+      transform: scale(0.9);
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      color: var(--text-main);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 8px;
     }
 
     .progress-bar {
@@ -210,86 +246,28 @@
       height: 14px;
       border-radius: 50%;
       background: var(--accent);
-      box-shadow: 0 0 12px var(--accent);
+      box-shadow: 0 0 10px var(--accent);
       cursor: pointer;
-    }
-
-    .controls-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .controls-left, .controls-right {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-circle {
-      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
-      border: none;
-      color: #fff;
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 4px 18px var(--accent-glow);
-      transition: transform 0.2s;
-    }
-
-    .btn-circle:active {
-      transform: scale(0.9);
-    }
-
-    .btn-icon {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--glass-border);
-      color: var(--text-main);
-      width: 40px;
-      height: 40px;
-      border-radius: 12px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-icon:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .btn-icon:active {
-      transform: scale(0.92);
     }
 
     .save-offline-btn {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--glass-border);
       color: var(--text-main);
-      padding: 10px 18px;
+      padding: 8px 16px;
       border-radius: 20px;
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      transition: background 0.2s;
-    }
-
-    .save-offline-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
+      gap: 6px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
+      gap: 22px;
       max-width: 1400px;
       margin: 0 auto;
     }
@@ -300,40 +278,43 @@
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
-      backdrop-filter: blur(15px);
+      transition: transform 0.25s, border-color 0.25s;
+      backdrop-filter: blur(10px);
     }
 
     .card:hover {
       transform: translateY(-6px);
       border-color: rgba(233, 84, 32, 0.4);
-      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
     }
 
     .card-thumb {
       position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      background: linear-gradient(135deg, #14141f, #0c0c14);
+      background: linear-gradient(135deg, #181824, #101018);
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 2.2rem;
+      color: var(--accent);
     }
 
     .play-overlay {
-      width: 52px;
-      height: 52px;
-      background: rgba(233, 84, 32, 0.9);
+      position: relative;
+      z-index: 2;
+      width: 50px;
+      height: 50px;
+      background: rgba(233, 84, 32, 0.85);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      box-shadow: 0 0 25px var(--accent-glow);
+      box-shadow: 0 0 20px var(--accent-glow);
     }
 
     .card-info {
-      padding: 18px;
+      padding: 16px;
     }
 
     .card-title {
@@ -342,12 +323,18 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .card-meta {
       font-size: 0.82rem;
       color: var(--text-muted);
+    }
+
+    .badge-offline {
+      color: #00ffaa;
+      font-size: 0.78rem;
+      font-weight: 600;
     }
 
     #status {
@@ -364,61 +351,42 @@
   <header>
     <div class="logo" onclick="closePlayer()">
       <div class="logo-badge">
-        <svg class="svg-icon" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="24" fill="none" stroke="#ffffff" stroke-width="8"/>
-          <circle cx="50" cy="18" r="9" fill="#ffffff"/>
-          <circle cx="22" cy="66" r="9" fill="#ffffff"/>
-          <circle cx="78" cy="66" r="9" fill="#ffffff"/>
+        <svg viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="24" />
+          <circle cx="50" cy="20" r="8" fill="#ffffff" stroke="none" />
+          <circle cx="24" cy="65" r="8" fill="#ffffff" stroke="none" />
+          <circle cx="76" cy="65" r="8" fill="#ffffff" stroke="none" />
         </svg>
       </div>
       <span>gitmum</span>
     </div>
-    <button class="install-btn" id="installBtn">Install App</button>
+    <button class="install-btn" id="installBtn"> Install App</button>
   </header>
+
+  <div id="offlineNotice">
+    <h3>📡 Offline Mode Active</h3>
+    <p>Showing local tracks saved on your device.</p>
+  </div>
 
   <div class="player-section" id="playerSection">
     <div class="player-card">
       <div class="main-video-box">
-        <video id="mainPlayer" onclick="togglePlay()"></video>
+        <video id="mainPlayer" preload="metadata" controlsList="nodownload noremoteplayback"></video>
       </div>
       <div class="main-details">
         <h2 class="main-title" id="mainTitle">Track Title</h2>
-        
-        <div class="custom-controls">
-          <div class="progress-container">
-            <span class="time-stamp" id="currentTime">0:00</span>
-            <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
-            <span class="time-stamp" id="durationTime">0:00</span>
-          </div>
-          
-          <div class="controls-row">
-            <div class="controls-left">
-              <button class="btn-circle" id="playBtn" onclick="togglePlay()">
-                <svg class="svg-icon" id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-              </button>
-              <button class="btn-icon" onclick="skipTime(-10)">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
-              </button>
-              <button class="btn-icon" onclick="skipTime(10)">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
-              </button>
-              <button class="btn-icon" id="muteBtn" onclick="toggleMute()">
-                <svg class="svg-icon" id="muteIcon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
-              </button>
-            </div>
-            
-            <div class="controls-right">
-              <button class="save-offline-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
-                <span id="saveBtnText">Save Offline</span>
-              </button>
-              <button class="btn-icon" onclick="toggleFullscreen()">
-                <svg class="svg-icon" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
-              </button>
-            </div>
-          </div>
+        <div class="player-controls">
+          <button class="btn-circle" id="playBtn" onclick="togglePlay()">▶</button>
+          <input type="range" class="progress-bar" id="seekBar" value="0" min="0" max="100" oninput="seekVideo(this.value)">
+          <button class="btn-icon" id="muteBtn" onclick="toggleMute()">🔊</button>
+          <button class="save-offline-btn" id="downloadAppBtn" onclick="downloadTrackLocally()">💾 Save Offline</button>
         </div>
       </div>
+    </div>
+    
+    <div class="player-card" id="sidebarList">
+      <h3 style="margin-bottom: 18px; font-size: 1.1rem; font-weight: 700;">Up Next</h3>
+      <div id="nextContainer" style="display: flex; flex-direction: column; gap: 14px;"></div>
     </div>
   </div>
 
@@ -427,25 +395,11 @@
   </main>
 
   <script>
-    // Force browser tab to reload the Ubuntu icon dynamically
-    (function forceFaviconRefresh() {
-      const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>`;
-      const link = document.getElementById('dynamicFavicon');
-      if (link) {
-        link.remove();
-      }
-      const newLink = document.createElement('link');
-      newLink.id = 'dynamicFavicon';
-      newLink.rel = 'icon';
-      newLink.type = 'image/svg+xml';
-      newLink.href = 'data:image/svg+xml;utf8,' + svgIcon + '?v=' + Date.now();
-      document.getElementsByTagName('head')[0].appendChild(newLink);
-    })();
-
+    // Service Worker Registration
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js', { scope: './' })
-          .then(reg => { reg.update(); })
+          .then(reg => console.log('SW Registered:', reg.scope))
           .catch(err => console.error('SW Error:', err));
       });
     }
@@ -462,8 +416,10 @@
     installBtn.addEventListener('click', () => {
       if (deferredPrompt) {
         deferredPrompt.prompt();
-        deferredPrompt.userChoice.then(() => {
-          installBtn.style.display = 'none';
+        deferredPrompt.userChoice.then((result) => {
+          if (result.outcome === 'accepted') {
+            installBtn.style.display = 'none';
+          }
           deferredPrompt = null;
         });
       }
@@ -477,51 +433,86 @@
     const playerSection = document.getElementById('playerSection');
     const mainPlayer = document.getElementById('mainPlayer');
     const mainTitle = document.getElementById('mainTitle');
-    const playIcon = document.getElementById('playIcon');
-    const muteIcon = document.getElementById('muteIcon');
+    const playBtn = document.getElementById('playBtn');
+    const muteBtn = document.getElementById('muteBtn');
     const seekBar = document.getElementById('seekBar');
-    const currentTimeEl = document.getElementById('currentTime');
-    const durationTimeEl = document.getElementById('durationTime');
-    const saveBtnText = document.getElementById('saveBtnText');
+    const offlineNotice = document.getElementById('offlineNotice');
+    const downloadAppBtn = document.getElementById('downloadAppBtn');
 
     let currentFileUrl = '';
+    let currentTitleClean = '';
+    let allFiles = [];
 
-    const iconPlay = 'M8 5v14l11-7z';
-    const iconPause = 'M6 19h4V5H6v14zm8-14v14h4V5h-4z';
-    const iconVolOn = 'M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z';
-    const iconVolMute = 'M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z';
+    function updateNetworkStatus() {
+      if (!navigator.onLine) {
+        offlineNotice.style.display = 'block';
+        loadOfflineTracks();
+      } else {
+        offlineNotice.style.display = 'none';
+        fetchOnlineTracks();
+      }
+    }
 
-    function fetchTracks() {
+    window.addEventListener('online', updateNetworkStatus);
+    window.addEventListener('offline', updateNetworkStatus);
+
+    function fetchOnlineTracks() {
       fetch(apiUrl)
         .then(res => res.json())
         .then(data => {
-          const files = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
-          renderGrid(files);
+          allFiles = data.filter(item => item.type === 'file' && item.name.toLowerCase().endsWith('.mp4'));
+          renderGrid(allFiles);
         })
-        .catch(() => {
-          container.innerHTML = '<p id="status">Error loading videos from repo.</p>';
-        });
+        .catch(() => loadOfflineTracks());
+    }
+
+    async function loadOfflineTracks() {
+      const cache = await caches.open('gitmum-media');
+      const keys = await cache.keys();
+      
+      if (keys.length === 0) {
+        container.innerHTML = '<p id="status">No saved offline tracks found.</p>';
+        return;
+      }
+
+      container.innerHTML = '';
+      keys.forEach(request => {
+        const url = request.url;
+        const filename = url.substring(url.lastIndexOf('/') + 1);
+        const cleanTitle = decodeURIComponent(filename).replace(/\.mp4$/i, '');
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.onclick = () => openVideo(url, cleanTitle);
+
+        card.innerHTML = `
+          <div class="card-thumb">
+            <div class="play-overlay">▶</div>
+          </div>
+          <div class="card-info">
+            <div class="card-title">${cleanTitle}</div>
+            <div class="card-meta"><span class="badge-offline">⚡ Saved Offline</span></div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
     }
 
     function renderGrid(files) {
       if (files.length === 0) {
-        container.innerHTML = '<p id="status">No MP4 files found.</p>';
+        container.innerHTML = '<p id="status">No MP4 tracks found in repository.</p>';
         return;
       }
       container.innerHTML = '';
       files.forEach(file => {
         const cleanTitle = file.name.replace(/\.mp4$/i, '');
-        const relativeUrl = `./${encodeURIComponent(file.name)}`;
-
         const card = document.createElement('div');
         card.className = 'card';
-        card.onclick = () => openVideo(relativeUrl, cleanTitle);
+        card.onclick = () => openVideo(file.download_url, cleanTitle);
 
         card.innerHTML = `
           <div class="card-thumb">
-            <div class="play-overlay">
-              <svg class="svg-icon" viewBox="0 0 24 24"><path d="${iconPlay}"/></svg>
-            </div>
+            <div class="play-overlay">▶</div>
           </div>
           <div class="card-info">
             <div class="card-title">${cleanTitle}</div>
@@ -532,12 +523,41 @@
       });
     }
 
-    function openVideo(url, title) {
-      currentFileUrl = url;
+    async function downloadTrackLocally() {
+      if (!currentFileUrl) return;
+      downloadAppBtn.innerText = '⏳ Saving...';
+      try {
+        const cache = await caches.open('gitmum-media');
+        await cache.add(currentFileUrl);
+        downloadAppBtn.innerText = '✓ Saved Offline';
+      } catch (err) {
+        downloadAppBtn.innerText = '❌ Failed';
+      }
+    }
+
+    async function checkSavedState(url) {
+      const cache = await caches.open('gitmum-media');
+      const match = await cache.match(url);
+      downloadAppBtn.innerText = match ? '✓ Saved Offline' : '💾 Save Offline';
+    }
+
+    async function openVideo(url, title) {
+      currentTitleClean = title;
       mainTitle.innerText = title;
-      mainPlayer.src = url;
       playerSection.style.display = 'grid';
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      try {
+        const response = await fetch(url);
+        const blob = await response.blob();
+        currentFileUrl = url;
+        mainPlayer.src = URL.createObjectURL(blob);
+      } catch (err) {
+        currentFileUrl = url;
+        mainPlayer.src = url;
+      }
+      
+      checkSavedState(url);
       safePlay();
     }
 
@@ -547,71 +567,30 @@
     }
 
     function safePlay() {
-      mainPlayer.play().then(() => {
-        playIcon.setAttribute('d', iconPause);
-      }).catch(() => {
-        playIcon.setAttribute('d', iconPlay);
-      });
+      const playPromise = mainPlayer.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => playBtn.innerText = '❚❚').catch(() => playBtn.innerText = '▶');
+      }
     }
 
     function togglePlay() {
-      if (mainPlayer.paused) {
-        safePlay();
-      } else {
-        mainPlayer.pause();
-        playIcon.setAttribute('d', iconPlay);
-      }
+      if (mainPlayer.paused) { safePlay(); } else { mainPlayer.pause(); playBtn.innerText = '▶'; }
     }
 
     function toggleMute() {
       mainPlayer.muted = !mainPlayer.muted;
-      muteIcon.setAttribute('d', mainPlayer.muted ? iconVolMute : iconVolOn);
-    }
-
-    function skipTime(val) {
-      mainPlayer.currentTime += val;
+      muteBtn.innerText = mainPlayer.muted ? '🔇' : '🔊';
     }
 
     function seekVideo(val) {
       if (mainPlayer.duration) mainPlayer.currentTime = (val / 100) * mainPlayer.duration;
     }
 
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        mainPlayer.requestFullscreen().catch(err => console.log(err));
-      } else {
-        document.exitFullscreen();
-      }
-    }
-
-    function formatTime(sec) {
-      if (isNaN(sec)) return "0:00";
-      const m = Math.floor(sec / 60);
-      const s = Math.floor(sec % 60);
-      return `${m}:${s < 10 ? '0' : ''}${s}`;
-    }
-
     mainPlayer.addEventListener('timeupdate', () => {
-      if (mainPlayer.duration) {
-        seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
-        currentTimeEl.innerText = formatTime(mainPlayer.currentTime);
-        durationTimeEl.innerText = formatTime(mainPlayer.duration);
-      }
+      if (mainPlayer.duration) seekBar.value = (mainPlayer.currentTime / mainPlayer.duration) * 100;
     });
 
-    async function downloadTrackLocally() {
-      if (!currentFileUrl) return;
-      saveBtnText.innerText = 'Saving...';
-      try {
-        const cache = await caches.open('gitmum-media');
-        await cache.add(currentFileUrl);
-        saveBtnText.innerText = 'Saved Offline';
-      } catch (err) {
-        saveBtnText.innerText = 'Failed';
-      }
-    }
-
-    fetchTracks();
+    updateNetworkStatus();
   </script>
 </body>
 </html>
