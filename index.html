@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>gitmum - NextGen Funk Hub</title>
+  <title>gitmum</title>
 
   <!-- PWA & Mobile Meta Tags -->
   <link rel="manifest" href="./manifest.json">
@@ -13,10 +13,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="gitmum">
 
-  <!-- Dynamic SVG Favicon -->
+  <!-- SVG Favicon (No external PNGs needed) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
   
-  <!-- Modern Google Font -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -24,8 +23,7 @@
   <style>
     :root {
       --bg-dark: #0a0a0c;
-      --bg-card: rgba(22, 22, 29, 0.7);
-      --bg-card-hover: rgba(35, 35, 48, 0.9);
+      --bg-card: rgba(22, 22, 29, 0.75);
       --accent: #ff0055;
       --accent-glow: rgba(255, 0, 85, 0.4);
       --accent-alt: #7928ca;
@@ -34,7 +32,6 @@
       --glass-border: rgba(255, 255, 255, 0.08);
       --radius-lg: 20px;
       --radius-md: 14px;
-      --radius-sm: 8px;
     }
 
     * {
@@ -59,7 +56,6 @@
       padding-bottom: 120px;
     }
 
-    /* Glassmorphic Header */
     header {
       position: sticky;
       top: 15px;
@@ -111,14 +107,13 @@
       cursor: pointer;
       display: none;
       box-shadow: 0 4px 20px var(--accent-glow);
-      transition: transform 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s;
     }
 
     .install-btn:active {
       transform: scale(0.95);
     }
 
-    /* Network Offline Notice Banner */
     #offlineNotice {
       display: none;
       background: rgba(255, 0, 85, 0.1);
@@ -131,7 +126,6 @@
       backdrop-filter: blur(10px);
     }
 
-    /* Next-Level Media Player Section */
     .player-section {
       display: none;
       grid-template-columns: 1fr 380px;
@@ -188,7 +182,6 @@
       text-overflow: ellipsis;
     }
 
-    /* Custom Player Control Suite */
     .player-controls {
       display: flex;
       align-items: center;
@@ -262,14 +255,8 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: background 0.2s;
     }
 
-    .save-offline-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    /* Grid Layout */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -278,21 +265,19 @@
       margin: 0 auto;
     }
 
-    /* Interactive Cards */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--glass-border);
       border-radius: var(--radius-md);
       overflow: hidden;
       cursor: pointer;
-      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.25s, box-shadow 0.25s;
+      transition: transform 0.25s, border-color 0.25s;
       backdrop-filter: blur(10px);
     }
 
     .card:hover {
       transform: translateY(-6px);
       border-color: rgba(255, 0, 85, 0.4);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
     }
 
     .card-thumb {
@@ -307,13 +292,6 @@
       color: var(--accent);
     }
 
-    .card-thumb::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle, transparent 40%, rgba(0,0,0,0.6) 100%);
-    }
-
     .play-overlay {
       position: relative;
       z-index: 2;
@@ -326,11 +304,6 @@
       justify-content: center;
       color: #fff;
       box-shadow: 0 0 20px var(--accent-glow);
-      transition: transform 0.2s;
-    }
-
-    .card:hover .play-overlay {
-      transform: scale(1.1);
     }
 
     .card-info {
@@ -349,9 +322,6 @@
     .card-meta {
       font-size: 0.82rem;
       color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .badge-offline {
@@ -371,7 +341,6 @@
 </head>
 <body oncontextmenu="return false;">
 
-  <!-- Header -->
   <header>
     <div class="logo" onclick="closePlayer()">
       <div class="logo-badge">⚡</div>
@@ -380,13 +349,11 @@
     <button class="install-btn" id="installBtn">⚡ Install App</button>
   </header>
 
-  <!-- Network Offline Notice -->
   <div id="offlineNotice">
     <h3>📡 Offline Mode Active</h3>
     <p>Showing local tracks saved on your device.</p>
   </div>
 
-  <!-- Player Hub -->
   <div class="player-section" id="playerSection">
     <div class="player-card">
       <div class="main-video-box">
@@ -409,7 +376,6 @@
     </div>
   </div>
 
-  <!-- Main Grid -->
   <main class="grid" id="songContainer">
     <p id="status">Syncing library...</p>
   </main>
