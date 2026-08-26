@@ -12,8 +12,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <!-- Ubuntu Style Vector Favicon -->
-  <link rel="icon" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>">
+  <!-- Ubuntu Vector Favicon -->
+  <link id="dynamicFavicon" rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -427,6 +427,21 @@
   </main>
 
   <script>
+    // Force browser tab to reload the Ubuntu icon dynamically
+    (function forceFaviconRefresh() {
+      const svgIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='50' fill='%23e95420'/><circle cx='50' cy='50' r='24' fill='none' stroke='%23ffffff' stroke-width='7'/><circle cx='50' cy='20' r='8' fill='%23ffffff'/><circle cx='24' cy='65' r='8' fill='%23ffffff'/><circle cx='76' cy='65' r='8' fill='%23ffffff'/></svg>`;
+      const link = document.getElementById('dynamicFavicon');
+      if (link) {
+        link.remove();
+      }
+      const newLink = document.createElement('link');
+      newLink.id = 'dynamicFavicon';
+      newLink.rel = 'icon';
+      newLink.type = 'image/svg+xml';
+      newLink.href = 'data:image/svg+xml;utf8,' + svgIcon + '?v=' + Date.now();
+      document.getElementsByTagName('head')[0].appendChild(newLink);
+    })();
+
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js', { scope: './' })
